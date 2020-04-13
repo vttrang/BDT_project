@@ -72,7 +72,9 @@
 	$ ./kafka-console-consumer.sh --zookeeper localhost:2181 -topic ${topic_name} --from-beginnin
 	```
 7. Import data
-	a. Prepares data (*.csv) // Reads per file
+	
+	a. Prepares data (*.csv) // Reads per file by date
+	
 	b. Prepares dataRun.sh
 	```sh 
 	#!/bin/ksh
