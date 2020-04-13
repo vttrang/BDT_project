@@ -73,7 +73,8 @@
 	```
 7. Import data
 	a. Preparing data (*.csv) // Reads per file
-	b. ```sh 
+	b. 
+	```sh 
 	sudo sh /home/cloudera/Downloads/dataRun.sh | /usr/lib/kafka/bin/kafka-console-producer.sh --broker-list localhost:9092 --topic ${topic-name}
 	```
 	c. dataRun.sh content
