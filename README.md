@@ -72,11 +72,8 @@
 	$ ./kafka-console-consumer.sh --zookeeper localhost:2181 -topic ${topic_name} --from-beginnin
 	```
 7. Import data
-	a. Preparing data (*.csv) // Reads per file
-	```sh 
-	sudo sh /home/cloudera/Downloads/dataRun.sh | /usr/lib/kafka/bin/kafka-console-producer.sh --broker-list localhost:9092 --topic ${topic-name}
-	```
-	
+	a. Prepares data (*.csv) // Reads per file
+	b. Prepares dataRun.sh
 	```sh 
 	#!/bin/ksh
 		file="/home/cloudera/Downloads/covid_dataset.csv"
@@ -95,4 +92,8 @@
 			fi
 			count=$[$count+1]
 		done <"$file"
+	```
+	c. Run
+	```sh 
+	sudo sh /home/cloudera/Downloads/dataRun.sh | /usr/lib/kafka/bin/kafka-console-producer.sh --broker-list localhost:9092 --topic ${topic-name}
 	```
