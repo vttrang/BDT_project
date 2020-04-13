@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <groupId>cs523</groupId>
+  <artifactId>SparkStream</artifactId>
+  <version>0.0.1-SNAPSHOT</version>
+
+  <name>SparkStream</name>
+  <!-- FIXME change it to the project's website -->
+  <url>http://www.example.com</url>
+
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <maven.compiler.source>1.8</maven.compiler.source>
+    <maven.compiler.target>1.8</maven.compiler.target>
+  </properties>
+
+  <dependencies>
+    <dependency>
+    	<groupId>org.apache.spark</groupId>
+    	<artifactId>spark-streaming-kafka-0-10_2.11</artifactId>
+    	<version>2.2.0</version>
+    </dependency>
+    
+    <dependency>
+    	<groupId>org.apache.spark</groupId>
+    	<artifactId>spark-core_2.11</artifactId>
+    	<version>2.2.0</version>
+    </dependency>
+    
+    <dependency>
+    	<groupId>org.apache.spark</groupId>
+    	<artifactId>spark-streaming_2.11</artifactId>
+    	<version>2.2.0</version>
+    </dependency>
+    
+    <dependency>
+    	<groupId>org.apache.spark</groupId>
+    	<artifactId>spark-sql_2.11</artifactId>
+    	<version>2.2.0</version>
+    </dependency>
+    
+	<dependency>
+    	<groupId>org.apache.hbase</groupId>
+    	<artifactId>hbase-client</artifactId>
+    	<version>1.2.12</version>
+	</dependency>
+	
+	<dependency>
+	    <groupId>org.hibernate</groupId>
+	    <artifactId>hibernate-validator</artifactId>
+	    <version>5.2.4.Final</version>
+	    <exclusions>
+	        <exclusion>
+	            <groupId>com.google.code.gson</groupId>
+	            <artifactId>gson</artifactId>
+	        </exclusion>
+	    </exclusions>
+	</dependency>
+
+	<dependency>
+	    <groupId>org.codehaus.jettison</groupId>
+	    <artifactId>jettison</artifactId>
+	    <version>1.1</version>
+	</dependency>
+
+     <dependency>
+         <groupId>org.codehaus.janino</groupId>
+         <artifactId>commons-compiler</artifactId>
+         <version>2.7.8</version>
+         <exclusions>
+             <exclusion>
+                 <groupId>com.google.code.gson</groupId>
+                 <artifactId>gson</artifactId>
+             </exclusion>
+         </exclusions>
+     </dependency>
+     
+      <dependency>
+            <groupId>com.hortonworks</groupId>
+            <artifactId>shc-core</artifactId>
+            <version>1.1.1-2.1-s_2.11</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.google.code.gson</groupId>
+                    <artifactId>gson</artifactId>
+                </exclusion>
+            </exclusions>
+     </dependency>
+     
+    <dependency>
+	  <groupId>org.elasticsearch</groupId>
+	  <artifactId>elasticsearch-hadoop</artifactId>
+	  <version>7.6.0</version>
+	</dependency>
+        
+  </dependencies>
+<repositories>
+    <repository>
+      <snapshots>
+        <enabled>false</enabled>
+      </snapshots>
+      <id>central</id>
+      <name>Central Repository</name>
+      <url>https://repo.maven.apache.org/maven2</url>
+    </repository>
+     <repository>
+       <id>repository.hortonworks</id>
+       <name>Hortonworks Repository</name>
+       <url>http://repo.hortonworks.com/content/repositories/releases/</url>
+     </repository>
+  </repositories>
+  <pluginRepositories>
+    <pluginRepository>
+      <releases>
+        <updatePolicy>never</updatePolicy>
+      </releases>
+      <snapshots>
+        <enabled>false</enabled>
+      </snapshots>
+      <id>central</id>
+      <name>Central Repository</name>
+      <url>https://repo.maven.apache.org/maven2</url>
+    </pluginRepository>
+  </pluginRepositories>
+ 
+</project>
