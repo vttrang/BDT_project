@@ -73,27 +73,26 @@
 	```
 7. Import data
 	a. Preparing data (*.csv) // Reads per file
-	b. 
 	```sh 
 	sudo sh /home/cloudera/Downloads/dataRun.sh | /usr/lib/kafka/bin/kafka-console-producer.sh --broker-list localhost:9092 --topic ${topic-name}
 	```
-	c. dataRun.sh content
+	
 	```sh 
 	#!/bin/ksh
-file="/home/cloudera/Downloads/covid_dataset.csv"
-count=1
-delay=5
-while IFS= read line
-do
-        # display $line or do something with $line
-	if [ $count -ne 1 ]; then
-		echo "$line"
-		modulo=$(( $count  % 11 ))
-		if [ $modulo -eq 0 ]; then
-   			sleep $delay
-		fi
-			#count=$[$count +1]		
-	fi
-	count=$[$count+1]
-done <"$file"
+		file="/home/cloudera/Downloads/covid_dataset.csv"
+		count=1
+		delay=5
+		while IFS= read line
+		do
+			# display $line or do something with $line
+			if [ $count -ne 1 ]; then
+				echo "$line"
+				modulo=$(( $count  % 11 ))
+				if [ $modulo -eq 0 ]; then
+					sleep $delay
+				fi
+					#count=$[$count +1]		
+			fi
+			count=$[$count+1]
+		done <"$file"
 	```
