@@ -69,5 +69,5 @@
 6. Start consumer for ${topic_name}
 	```sh
 	$ cd /usr/lib/kafka/bin 
-	$ ./kafka-console-consumer.sh --zookeeper localhost:2181 -topic test_topic --from-beginnin
+	$ ./kafka-console-consumer.sh --zookeeper localhost:2181 -topic ${topic_name} --from-beginnin
 	```
