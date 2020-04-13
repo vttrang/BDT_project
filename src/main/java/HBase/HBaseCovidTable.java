@@ -37,20 +37,20 @@ public class HBaseCovidTable {
 				Admin admin = connection.getAdmin()) {
 			HTableDescriptor table = new HTableDescriptor(
 					TableName.valueOf(TABLE_NAME));
-			table.addFamily(new HColumnDescriptor(CF_1_CONFIRMED));
-			table.addFamily(new HColumnDescriptor(CF_2_DEATH));
-			table.addFamily(new HColumnDescriptor(CF_3_RECOVERED));
-			table.addFamily(new HColumnDescriptor(CF_4_ACTIVE));
-
-			System.out.print("Creating table");
-
+			
 			if (admin.tableExists(table.getTableName())) {
-				admin.disableTable(table.getTableName());
-				admin.deleteTable(table.getTableName());
+				System.out.println("Table has already existed");
+			} else {
+				
+				table.addFamily(new HColumnDescriptor(CF_1_CONFIRMED));
+				table.addFamily(new HColumnDescriptor(CF_2_DEATH));
+				table.addFamily(new HColumnDescriptor(CF_3_RECOVERED));
+				table.addFamily(new HColumnDescriptor(CF_4_ACTIVE));
+				
+				System.out.print("Creating table");
+				admin.createTable(table);
+				System.out.println("Done!");
 			}
-			admin.createTable(table);
-
-			System.out.println("Done!");
 		}
 	}
 
