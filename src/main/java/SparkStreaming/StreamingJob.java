@@ -1,11 +1,11 @@
 package SparkStreaming;
 
-import java.io.IOException;
-import java.util.ArrayList;
+import java.io.InputStream;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Map;
 import java.util.HashMap;
+import java.util.Properties;
 
 import org.apache.spark.SparkConf;
 import org.apache.spark.streaming.Duration;
@@ -17,27 +17,40 @@ import org.apache.spark.streaming.kafka010.LocationStrategies;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.common.serialization.StringDeserializer;
 
+import HBase.HBaseCovidTable;
+
 public final class StreamingJob {
 	
 	private static HBaseCovidTable covidTable;
-	private static int key = 1;
-
+	
     public static void main(String[] args) throws Exception {
-
-        SparkConf sparkConf = new SparkConf().setAppName("StreamingJob").setMaster("local[1]");;
+    	InputStream input = StreamingJob.class.getClassLoader().getResourceAsStream("config.properties");
+  
+    	if (input == null) {
+            System.out.println("Sorry, unable to find config.properties");
+            return;
+        }
+    	
+    	Properties prop = new Properties();
+    	//load a properties file from class path, inside static method
+        prop.load(input);
+        
+        SparkConf sparkConf = new SparkConf()
+        				.setAppName(prop.getProperty("spark.streaming.application.name"))
+        				.setMaster(prop.getProperty("spark.streaming.master"));;
         
         // Create the context with 2 seconds batch size
         JavaStreamingContext jssc = new JavaStreamingContext(sparkConf, new Duration(2000));
         
         Map<String, Object> kafkaParams = new HashMap<>();
-        kafkaParams.put("bootstrap.servers", "localhost:9092,anotherhost:9092");
+        kafkaParams.put(prop.getProperty("bootstrap.servers.key"), prop.getProperty("bootstrap.servers.value"));
         kafkaParams.put("key.deserializer", StringDeserializer.class);
         kafkaParams.put("value.deserializer", StringDeserializer.class);
-        kafkaParams.put("group.id", "use_a_separate_group_id_for_each_stream");
-        kafkaParams.put("auto.offset.reset", "latest");
-        kafkaParams.put("enable.auto.commit", false);
+        kafkaParams.put(prop.getProperty("group.id.key"), prop.getProperty("group.id.value"));
+        kafkaParams.put(prop.getProperty("auto.offset.reset.key"), prop.getProperty("auto.offset.reset.value"));
+        kafkaParams.put(prop.getProperty("enable.auto.commit.key"), prop.getProperty("enable.auto.commit.value"));
 
-        Collection<String> topics = Arrays.asList("test_topic");
+        Collection<String> topics = Arrays.asList(args[0]);
 
         final JavaInputDStream<ConsumerRecord<String, String>> messages = KafkaUtils.createDirectStream(
                 jssc,
@@ -45,15 +58,12 @@ public final class StreamingJob {
                 ConsumerStrategies.<String, String>Subscribe(topics, kafkaParams)
         );
         
-        covidTable = new HBaseCovidTable("lines", "words", Arrays.asList("word"));
-        messages.foreachRDD(rdd -> rdd.foreach(message ->  writeValue(message.value())));
+        covidTable = new HBaseCovidTable();
+        messages.foreachRDD(rdd -> rdd.foreach(message ->  {
+        	covidTable.insertData(message.value());	
+        }));
 
         jssc.start();
         jssc.awaitTermination();
     }
-    
-    private static void writeValue(String string) throws IOException{
-    	covidTable.insertData(Integer.toString(key), "words", "word", string);
-    	key++;
-	}
 }
