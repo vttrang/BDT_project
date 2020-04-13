@@ -26,7 +26,7 @@
 
 	```sh
 	$ cd /etc/yum.repos.d 
-	$ wget http://archive.cloudera.com/kafka/redhat/6/x86_64/kafka/
+	$ sudo wget http://archive.cloudera.com/kafka/redhat/6/x86_64/kafka/
 	```
 
 	- install wget if your machine did not have wget 
