@@ -49,8 +49,6 @@
 		```sh
 		$ sudo jps
 		```
-		```sh
-		[cloudera@quickstart bin]$ sudo jps
 ...
 2189 QuorumPeerMain
 2574 Kafka
