@@ -104,7 +104,9 @@
 ### Startup Cloudera Manager (CM)
 1. Once the VM starts up, navigate to the Desktop and Execute the “Launch Cloudera Express” script.
 2. Once complete, you should now be able to view the Cloudera Manager by opening up your web browser (within the VM) and navigating to:
-``` http://quickstart.cloudera:7180 ```
+```
+http://quickstart.cloudera:7180
+```
 Default Credentials: cloudera/cloudera
 
 ### Configure CM to use Parcels
@@ -114,24 +116,34 @@ Default Credentials: cloudera/cloudera
 
 ### Select the version of Spark 2 you want to install
 1. Navigate here to get a full list of the Spark versions that are available:
-``` https://docs.cloudera.com/documentation/spark2/latest/topics/spark2_packaging.html ```
+```
+https://docs.cloudera.com/documentation/spark2/latest/topics/spark2_packaging.html
+```
 2. Copy the Custom Service Descriptor (CSD) URL (To be referred to as CSD_URL in next sections)
 
 ### Install Spark 2 CSD
 1. Open a Command Line Terminal
 2. Login as Root
-``` $ sudo su ```
+```
+$ sudo su
+```
 3. Navigate to the CSD Directory
-``` $ cd /opt/cloudera/csd ```
+```
+$ cd /opt/cloudera/csd
+```
 4. Download the CSD (Replace CSD_URL with the URL you copied in previous sections)
-``` $ wget CSD_URL ```
+```
+$ wget CSD_URL
+```
 5. Set Permissions and Ownership
 ``` 
 $ chown cloudera-scm:cloudera-scm SPARK2_ON_YARN-x.x.x.clouderax.jar
 $ chmod 644 SPARK2_ON_YARN-x.x.x.clouderax.jar
 ```
 6. Restart CM Services
-``` $ service cloudera-scm-server restart ```
+```
+$ service cloudera-scm-server restart
+```
 7. Login to the Cloudera Manager Web UI
 8. Restart the Cloudera Management Service
 - Select Clusters > Cloudera Management Service
