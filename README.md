@@ -22,9 +22,9 @@
 </p>
 
 ## HBase schema
-| Row Key | Confirmed | Death | Recovered | Active |
-| ------- | --- | --- | --- | --- | --- |
-| <Country>.<State>.<County> || Date-1 | Date-2 | ... | Current Date ||| Date-1 | Date-2 | ... | Current Date ||| Date-1 | Date-2 | ... | Current Date ||| Date-1 | Date-2 | ... | Current Date ||
+<p align="center">
+  <img src="https://i.imgur.com/qPlSwnn.png">
+</p>
 
 # How to installation project
 ### Install kafka
