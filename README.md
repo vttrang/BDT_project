@@ -279,7 +279,7 @@
 	sudo chkconfig --add kibana
 	sudo chkconfig kibana on
 	```
-5 Start kiabana
+5. Start kiabana
 	```sh
 	sudo service kibana start
 	```
