@@ -99,3 +99,70 @@
 	```sh 
 	sudo sh /home/cloudera/Downloads/dataRun.sh | /usr/lib/kafka/bin/kafka-console-producer.sh --broker-list localhost:9092 --topic ${topic-name}
 	```
+
+# How to install Spark 2 in Cloudera Manager (CM)
+### Startup Cloudera Manager (CM)
+1. Once the VM starts up, navigate to the Desktop and Execute the “Launch Cloudera Express” script.
+2. Once complete, you should now be able to view the Cloudera Manager by opening up your web browser (within the VM) and navigating to:
+``` http://quickstart.cloudera:7180 ```
+Default Credentials: cloudera/cloudera
+
+### Configure CM to use Parcels
+1. Navigate to the Desktop and Execute the “Migrate to Parcels” script.
+2. You can validate that CM is now using parcels by logging into the Cloudera Manager Web UI. Right next to the cluster name, it should say: (CDH x.x.x, Parcels)
+3. You will need to restart all the services on the cluster after step-2. You can do this by: Going to the Cloudera Manager Web UI, click on the button next to the Cluster Name and click Start.
+
+### Select the version of Spark 2 you want to install
+1. Navigate here to get a full list of the Spark versions that are available:
+``` https://docs.cloudera.com/documentation/spark2/latest/topics/spark2_packaging.html ```
+2. Copy the Custom Service Descriptor (CSD) URL (To be referred to as CSD_URL in next sections)
+
+### Install Spark 2 CSD
+1. Open a Command Line Terminal
+2. Login as Root
+``` $ sudo su ```
+3. Navigate to the CSD Directory
+``` $ cd /opt/cloudera/csd ```
+4. Download the CSD (Replace CSD_URL with the URL you copied in previous sections)
+``` $ wget CSD_URL ```
+5. Set Permissions and Ownership
+``` 
+$ chown cloudera-scm:cloudera-scm SPARK2_ON_YARN-x.x.x.clouderax.jar
+$ chmod 644 SPARK2_ON_YARN-x.x.x.clouderax.jar
+```
+6. Restart CM Services
+``` $ service cloudera-scm-server restart ```
+7. Login to the Cloudera Manager Web UI
+8. Restart the Cloudera Management Service
+- Select Clusters > Cloudera Management Service
+- Select Actions > Restart
+9. Restart the Cluster Services
+- Select Clusters > Cloudera QuickStart
+- Select Actions > Restart
+
+### Install Spark 2 Parcel
+1. Login to the Cloudera Manager Web UI
+2. Navigate to Hosts > Parcels
+3. Locate the SPARK2 parcel from the list
+4. Under Actions, click Download and wait for it to download
+5. Under Actions, click Distribute and wait for it to be distributed
+6. Under Actions, click Activate and wait for it to be activated
+
+### Install Spark 2 Service
+1. Login to the Cloudera Manager Web UI
+2. Click on the button next to the Cluster Name and select “Add Service”
+3. Select “Spark 2” and click “Continue”
+4. Select whichever set of dependencies you would like and click “Continue”
+5. Select the one instance available as the **History Server** and the **Gateway** and click “Continue”
+6. Leave the default configurations as is and click “Continue”
+7. The service will now be added and then you will be taken back to the CM home
+8. Click on the blue button next to the Spark 2 service and click “Restart Stale Services”
+9. Ensure the “Re-deploy client configuration” is checked and click “Restart Now”
+
+## Testing
+### Smoke Test
+```
+MASTER=yarn /opt/cloudera/parcels/SPARK2/lib/spark2/bin/run-example SparkPi 100
+```
+
+Ref: https://blog.clairvoyantsoft.com/installing-spark2-on-clouderas-quickstart-vm-bbf0db5fb3a9
