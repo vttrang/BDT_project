@@ -56,7 +56,11 @@ public class SparkSQL {
 
         dataset.createOrReplaceTempView(HBaseCovidTable.TABLE_NAME);
        
-        spark.sql("SELECT * FROM " + HBaseCovidTable.TABLE_NAME).show();
+        spark.sql("SELECT * FROM " + HBaseCovidTable.TABLE_NAME).foreach(rdd -> {
+        	rdd.get(1);
+        });
+        
+        
         System.out.println("Schema: " + catalog);
     }
 }

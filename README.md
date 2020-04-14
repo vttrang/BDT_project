@@ -13,11 +13,18 @@
 | ------- | --- | --- |
 | Kafka | 2.0.1 | new install |
 | Spark Core | 2.2.0 | upgrade from 1.6.0 |
+| Elasticsearch | 6.8.8 | new install |
+| Kibana | 6.8.8 | new install|
 
 ## Project overview
 <p align="center">
   <img width="1444" height="596" src="https://i.imgur.com/llJiv54.png">
 </p>
+
+## HBase schema
+| Row Key | Confirmed | Death | Recovered | Active |
+| ------- | --- | --- | --- | --- | --- |
+| <Country>.<State>.<County> || Date-1 | Date-2 | ... | Current Date ||| Date-1 | Date-2 | ... | Current Date ||| Date-1 | Date-2 | ... | Current Date ||| Date-1 | Date-2 | ... | Current Date ||
 
 # How to installation project
 ### Install kafka
@@ -176,3 +183,107 @@
     ```
 
     Ref: https://blog.clairvoyantsoft.com/installing-spark2-on-clouderas-quickstart-vm-bbf0db5fb3a9
+	
+### Install Elasticsearch 
+1. Install GPG key for the elasticsearch rpm packages.
+	```sh
+	sudo rpm --import https://artifacts.elastic.co/GPG-KEY-elasticsearch
+	```
+2. Create yum repository file for the elasticsearch
+	```sh
+	sudo vi /etc/yum.repos.d/elasticsearch.repo
+	```
+	Add below content
+	```
+	[elasticsearch-6.x]
+	name=Elasticsearch repository for 6.x packages
+	baseurl=https://artifacts.elastic.co/packages/6.x/yum
+	gpgcheck=1
+	gpgkey=https://artifacts.elastic.co/GPG-KEY-elasticsearch
+	enabled=1
+	autorefresh=1
+	type=rpm-md
+	```
+3. Install Elasticsearch
+	```sh
+	sudo yum install elasticsearch
+	```
+4. Config Elasticsearch is localhost:9200
+	```sh
+	sudo vi /etc/elasticsearch/elasticsearch.yml
+	```
+	Add config `network.host`
+	```sh
+	network.host: localhost
+	```
+5. Activate Elasticsearch as a service
+	```sh
+	sudo chkconfig --add elasticsearch
+	sudo chkconfig elasticsearch on
+	```
+6. Start Elasticsearch
+	```sh
+	sudo service elasticsearch start
+	```
+7. Test Elasticsearch
+	```sh
+	curl localhost:9200
+	```
+	Result
+	```json
+	{
+		"name" : "o45_amy",
+		"cluster_name" : "elasticsearch",
+		"cluster_uuid" : "7HaWcw8wRvWXXPCkoIzXsw",
+		"version" : {
+			"number" : "6.8.8",
+			"build_flavor" : "default",
+			"build_type" : "rpm",
+			"build_hash" : "2f4c224",
+			"build_date" : "2020-03-18T23:22:18.622755Z",
+			"build_snapshot" : false,
+			"lucene_version" : "7.7.2",
+			"minimum_wire_compatibility_version" : "5.6.0",
+			"minimum_index_compatibility_version" : "5.0.0"
+ 		},
+		"tagline" : "You Know, for Search"
+	}
+	```
+	
+### Install kibana
+1. Install GPG key for the elasticsearch rpm packages.
+	```sh
+	sudo rpm --import https://artifacts.elastic.co/GPG-KEY-elasticsearch
+	```
+2. Create yum repository file for the kibana
+	```sh
+	sudo vi /etc/yum.repos.d/kibana.repo
+	```
+	Add below content
+	```
+	[kibana-6.x]
+	name=Kibana repository for 6.x packages
+	baseurl=https://artifacts.elastic.co/packages/6.x/yum
+	gpgcheck=1
+	gpgkey=https://artifacts.elastic.co/GPG-KEY-elasticsearch
+	enabled=1
+	autorefresh=1
+	type=rpm-md
+	```
+3. Install Kibana
+	```sh
+	sudo yum install kibana
+	```
+4. Activate Kibana as a service
+	```sh
+	sudo chkconfig --add kibana
+	sudo chkconfig kibana on
+	```
+5 Start kiabana
+	```sh
+	sudo service kibana start
+	```
+6. Test: default kibana will connect to x-pack elasticsearch by localhost:9200, so don't need to config host for local kibana
+	```url
+	localhost:5601  - admin/admin
+	```
