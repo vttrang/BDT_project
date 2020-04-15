@@ -130,11 +130,17 @@ public class HBaseCovidTable {
 
 		String[] cells = new String[12];
 		if (line.matches(newFormat)){
-			cells = line.split(",");
+			cells = line.split(",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)", -1);
+			if(cells[3].indexOf(',') > 0){
+				cells[3] = cells[3].substring(1,cells[3].indexOf(','));
+			}
 			cells[4] = convertDate(cells[4]);
 		}
 		else if (line.matches(dirtyFormat)){
-			cells = line.split(",");
+			cells = line.split(",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)", -1);
+			if(cells[3].indexOf(',') > 0){
+				cells[3] = cells[3].substring(1,cells[3].indexOf(','));
+			}
 			cells[4] = convertDate(cells[4]);
 		}
 		else if (line.matches(oldFormat) && line.split(",").length == 8){
