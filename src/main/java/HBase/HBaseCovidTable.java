@@ -131,9 +131,11 @@ public class HBaseCovidTable {
 		String[] cells = new String[12];
 		if (line.matches(newFormat)){
 			cells = line.split(",");
+			cells[4] = convertDate(cells[4]);
 		}
 		else if (line.matches(dirtyFormat)){
 			cells = line.split(",");
+			cells[4] = convertDate(cells[4]);
 		}
 		else if (line.matches(oldFormat) && line.split(",").length == 8){
 			String[] oldCells = new String[8];
