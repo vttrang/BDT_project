@@ -1,6 +1,5 @@
 package SparkSQL;
 
-import org.apache.hadoop.hbase.util.HBaseFsck;
 import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;
 import org.apache.spark.sql.SparkSession;
@@ -31,12 +30,7 @@ import org.spark_project.guava.collect.ImmutableList;
 import org.spark_project.guava.collect.ImmutableMap;
 
 public class SparkSQL {
-    /**
-     *
-     * @param args [0] is table name, [1] is day which is used to query
-     * @throws IOException
-     * @throws ParseException
-     */
+
     public static void main(String[] args) throws IOException, ParseException {
     	InputStream input = StreamingJob.class.getClassLoader().getResourceAsStream("config.properties");
     	
@@ -48,22 +42,18 @@ public class SparkSQL {
     	Properties prop = new Properties();
     	//load a properties file from class path, inside static method
         prop.load(input);
-
-        String tableName = HBaseCovidTable.DEFAULT_TABLE_NAME;
-        if("" != args[0]) {
-            tableName = args[0];
-        }
-        String catalog = "{\n" +
-                "\t \"table\":{\"namespace\":\"default\", \"name\":\"" + tableName + "\", \"tableCoder\":\"PrimitiveType\"},\n" +
-                "\t \"rowkey\":\"key\",\n" +
-                "\t \"columns\":{\n" +
-                "\t\t \"Rowkey\":{\"cf\":\"rowkey\", \"col\":\"key\", \"type\":\"string\"},\n" +
-                "\t\t \""+ HBaseCovidTable.CF_1_CONFIRMED + "\":{\"cf\":\""+ HBaseCovidTable.CF_1_CONFIRMED + "\", \"col\":\"" + args[0] + "\", \"type\":\"string\"},\n" +
-                "\t\t \""+ HBaseCovidTable.CF_2_DEATH + "\":{\"cf\":\""+ HBaseCovidTable.CF_2_DEATH + "\", \"col\":\"" + args[0] + "\", \"type\":\"string\"},\n" +
-                "\t\t \""+ HBaseCovidTable.CF_3_RECOVERED + "\":{\"cf\":\""+ HBaseCovidTable.CF_3_RECOVERED + "\", \"col\":\"" + args[0] + "\", \"type\":\"string\"},\n" +
-                "\t\t \""+ HBaseCovidTable.CF_4_ACTIVE + "\":{\"cf\":\""+ HBaseCovidTable.CF_4_ACTIVE + "\", \"col\":\"" + args[0] + "\", \"type\":\"string\"}\n" +
-                "\t}\n" +
-                "}";
+        
+    	 String catalog = "{\n" +
+    	            "\t \"table\":{\"namespace\":\"default\", \"name\":\"" + HBaseCovidTable.TABLE_NAME + "\", \"tableCoder\":\"PrimitiveType\"},\n" +
+    	            "\t \"rowkey\":\"key\",\n" +
+    	            "\t \"columns\":{\n" +
+    	            "\t\t \"Rowkey\":{\"cf\":\"rowkey\", \"col\":\"key\", \"type\":\"string\"},\n" +
+    	            "\t\t \""+ HBaseCovidTable.CF_1_CONFIRMED + "\":{\"cf\":\""+ HBaseCovidTable.CF_1_CONFIRMED + "\", \"col\":\"" + args[0] + "\", \"type\":\"string\"},\n" +
+    	            "\t\t \""+ HBaseCovidTable.CF_2_DEATH + "\":{\"cf\":\""+ HBaseCovidTable.CF_2_DEATH + "\", \"col\":\"" + args[0] + "\", \"type\":\"string\"},\n" +
+    	            "\t\t \""+ HBaseCovidTable.CF_3_RECOVERED + "\":{\"cf\":\""+ HBaseCovidTable.CF_3_RECOVERED + "\", \"col\":\"" + args[0] + "\", \"type\":\"string\"},\n" +
+    	            "\t\t \""+ HBaseCovidTable.CF_4_ACTIVE + "\":{\"cf\":\""+ HBaseCovidTable.CF_4_ACTIVE + "\", \"col\":\"" + args[0] + "\", \"type\":\"string\"}\n" +
+    	            "\t}\n" +
+    	            "}";
     	
         Map<String, String> optionsMap = new HashMap<>();
 
@@ -79,17 +69,17 @@ public class SparkSQL {
 
         Dataset<Row> dataset = spark.read().options(optionsMap).format("org.apache.spark.sql.execution.datasources.hbase").load();
 
-        dataset.createOrReplaceTempView(tableName);
+        dataset.createOrReplaceTempView(HBaseCovidTable.TABLE_NAME);
         
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        Date date = new SimpleDateFormat("yyyy-MM-dd").parse(args[1]);
+        Date date = new SimpleDateFormat("yyyy-MM-dd").parse(args[0]);  
        
         List<Map<String, Object>> covids = new ArrayList<Map<String, Object>>();
         
         //Process some map-reduce job to prepare data for report on elastic search
         
         //send data to ES 
-        for(Row rs : spark.sql("SELECT * FROM " + tableName).collectAsList()) {
+        for(Row rs : spark.sql("SELECT * FROM " + HBaseCovidTable.TABLE_NAME).collectAsList()) {
         	Map<String, Object> map = new HashMap<>(); 
             map.put("DATE", dateFormat.format(date)); 
             

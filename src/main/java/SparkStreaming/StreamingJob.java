@@ -22,12 +22,7 @@ import HBase.HBaseCovidTable;
 public final class StreamingJob {
 	
 	private static HBaseCovidTable covidTable;
-
-    /**
-     *
-     * @param args [0] is table name, [1] is topic name
-     * @throws Exception
-     */
+	
     public static void main(String[] args) throws Exception {
     	InputStream input = StreamingJob.class.getClassLoader().getResourceAsStream("config.properties");
   
@@ -55,7 +50,7 @@ public final class StreamingJob {
         kafkaParams.put(prop.getProperty("auto.offset.reset.key"), prop.getProperty("auto.offset.reset.value"));
         kafkaParams.put(prop.getProperty("enable.auto.commit.key"), prop.getProperty("enable.auto.commit.value"));
 
-        Collection<String> topics = Arrays.asList(args[1]);
+        Collection<String> topics = Arrays.asList(args[0]);
 
         final JavaInputDStream<ConsumerRecord<String, String>> messages = KafkaUtils.createDirectStream(
                 jssc,
@@ -63,7 +58,7 @@ public final class StreamingJob {
                 ConsumerStrategies.<String, String>Subscribe(topics, kafkaParams)
         );
         
-        covidTable = new HBaseCovidTable(args[0]);
+        covidTable = new HBaseCovidTable();
         messages.foreachRDD(rdd -> rdd.foreach(message ->  {
         	covidTable.insertData(message.value());	
         }));
