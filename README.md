@@ -289,8 +289,9 @@
 	```
 ## Example Run Project
 
-JAR FILE: https://drive.google.com/file/d/1zbOl35SwqzLyUaDEV0DlrPP_AVx4sG4b/view?usp=sharing
-ENV requirement: spark 2.2.0 - http://archive.cloudera.com/spark2/parcels/2.2.0.cloudera4/
+**JAR FILE:** https://drive.google.com/file/d/1zbOl35SwqzLyUaDEV0DlrPP_AVx4sG4b/view?usp=sharing
+
+**ENV requirement:** spark 2.2.0ENV requirement: spark 2.2.0 - http://archive.cloudera.com/spark2/parcels/2.2.0.cloudera4/
 
 1. Create topic : **topic_covid**
 	```sh
@@ -319,5 +320,7 @@ ENV requirement: spark 2.2.0 - http://archive.cloudera.com/spark2/parcels/2.2.0.
 > please check how to write the import_data.sh at import data section	
 
 6. Import data to elasticsearch 
-park2-submit --class "SparkSQL.SparkSQL" --master yarn /home/cloudera/Desktop/SparkStream.jar "hbase_table_name" "date"
+	```sh
+	park2-submit --class "SparkSQL.SparkSQL" --master yarn /home/cloudera/Desktop/SparkStream.jar "hbase_table_name" "date"
+	```
 > date format: yyyy-MM-dd
