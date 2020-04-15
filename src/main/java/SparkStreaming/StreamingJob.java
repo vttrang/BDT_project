@@ -61,9 +61,11 @@ public final class StreamingJob {
                 ConsumerStrategies.<String, String>Subscribe(topics, kafkaParams)
         );
         
+		
+        covidTable = new HBaseCovidTable();
+        
 		//Insert single row
-        /*covidTable = new HBaseCovidTable();
-        messages.foreachRDD(rdd -> rdd.foreach(message ->  {
+		/*messages.foreachRDD(rdd -> rdd.foreach(message ->  {
         	covidTable.insertData(message.value());	
         }));*/
 		

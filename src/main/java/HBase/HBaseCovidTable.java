@@ -96,6 +96,7 @@ public class HBaseCovidTable {
 			List<Put> putList = new ArrayList<Put>();
 			list.forEach(line -> {
 				String[] cells = parseData(line);
+				
 				String column = cells[4]; //date time format: yyyy-MM-dd
 				String rowKey = cells[3] + "." + cells[2] + "." + cells[1];
 				rowKey = rowKey.replace(' ', '_');
@@ -125,7 +126,7 @@ public class HBaseCovidTable {
 		if (line.matches(newFormat)) {
 			cells = line.split(",");
 		}
-		else if (line.matches(oldFormat) || line.matches(oldestFormat)){
+		else if (line.matches(oldFormat) && line.split(",").length == 8){
 			String[] oldCells = new String[8];
 			oldCells = line.split(",");
 			
@@ -135,6 +136,25 @@ public class HBaseCovidTable {
 			cells[7] = oldCells[3]; //confirmed
 			cells[8] = oldCells[4]; //death
 			cells[9] = oldCells[5]; //recovered
+		}
+		else if (line.matches(oldestFormat) && line.split(",").length == 6){
+			String[] oldCells = new String[6];
+			oldCells = line.split(",");
+			
+			cells[2] = oldCells[0]; //state
+			cells[3] = oldCells[1]; //country
+			cells[4] = convertDate(oldCells[2]); //date
+			cells[7] = oldCells[3]; //confirmed
+			cells[8] = oldCells[4]; //death
+			cells[9] = oldCells[5]; //recovered
+		}
+		else{
+			//Dirty data
+			cells[4] = "yyyy-MM-dd";
+			cells[7] = "";
+			cells[8] = "";
+			cells[9] = "";
+			cells[10] = "";
 		}
 
 		return cells;
