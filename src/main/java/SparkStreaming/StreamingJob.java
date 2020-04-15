@@ -6,6 +6,8 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.HashMap;
 import java.util.Properties;
+import java.util.List;
+import java.util.ArrayList;
 
 import org.apache.spark.SparkConf;
 import org.apache.spark.streaming.Duration;
@@ -22,6 +24,7 @@ import HBase.HBaseCovidTable;
 public final class StreamingJob {
 	
 	private static HBaseCovidTable covidTable;
+	private static List<String> list = new ArrayList<String>();
 	
     public static void main(String[] args) throws Exception {
     	InputStream input = StreamingJob.class.getClassLoader().getResourceAsStream("config.properties");
@@ -58,10 +61,20 @@ public final class StreamingJob {
                 ConsumerStrategies.<String, String>Subscribe(topics, kafkaParams)
         );
         
-        covidTable = new HBaseCovidTable();
+		//Insert single row
+        /*covidTable = new HBaseCovidTable();
         messages.foreachRDD(rdd -> rdd.foreach(message ->  {
         	covidTable.insertData(message.value());	
-        }));
+        }));*/
+		
+		//Insert multiple rows
+		messages.foreachRDD(rdd -> {
+        	list = new ArrayList<String>();
+        	rdd.foreach(message -> {
+        		list.add(message.value());
+        	});
+        	covidTable.insertMulti(list);
+        });
 
         jssc.start();
         jssc.awaitTermination();

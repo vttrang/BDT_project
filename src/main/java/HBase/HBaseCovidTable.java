@@ -14,6 +14,8 @@ import org.apache.hadoop.hbase.client.Table;
 import org.apache.hadoop.hbase.util.Bytes;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
+import java.util.ArrayList;
 
 public class HBaseCovidTable {
 
@@ -82,7 +84,36 @@ public class HBaseCovidTable {
 		} catch (StringIndexOutOfBoundsException ex) {
 			System.out.println("Error at:" + cells[4]);
 		}
+	}
+	
+	public void insertMulti(List<String> list) throws IOException {
+		System.out.print("Insert data");
 		
+		Configuration config = HBaseConfiguration.create();
+		try (Connection connection = ConnectionFactory.createConnection(config);
+				Table table = connection.getTable(TableName.valueOf(TABLE_NAME))) {
+
+			List<Put> putList = new ArrayList<Put>();
+			list.forEach(line -> {
+				String[] cells = parseData(line);
+				String column = cells[4]; //date time format: yyyy-MM-dd
+				String rowKey = cells[3] + "." + cells[2] + "." + cells[1];
+				rowKey = rowKey.replace(' ', '_');
+				System.out.println(line);
+				
+				Put p = new Put(Bytes.toBytes(rowKey));
+				p.addColumn(Bytes.toBytes(CF_1_CONFIRMED), Bytes.toBytes(column), Bytes.toBytes(cells[7]));
+				p.addColumn(Bytes.toBytes(CF_2_DEATH), Bytes.toBytes(column), Bytes.toBytes(cells[8]));
+				p.addColumn(Bytes.toBytes(CF_3_RECOVERED), Bytes.toBytes(column), Bytes.toBytes(cells[9]));
+				p.addColumn(Bytes.toBytes(CF_4_ACTIVE), Bytes.toBytes(column), Bytes.toBytes(cells[10]));
+				
+				putList.add(p);
+			});
+			
+			table.put(putList);
+		}
+		
+		System.out.println("Done!");
 	}
 
 	private String[] parseData(String line) {
@@ -109,7 +140,7 @@ public class HBaseCovidTable {
 		return cells;
 	}
 	
-	private static String convertDate(String date) {
+	private String convertDate(String date) {
 		String datePattern1 = "(.*)-(.*)-(.*) (.*)"; // 2020-04-12 23:18:00
 		String datePattern2 = "(.*)\\/(.*)\\/(.*) (.*)"; // 1/22/2020 17:00
 
