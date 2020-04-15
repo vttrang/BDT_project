@@ -287,3 +287,40 @@
 	```url
 	localhost:5601  - admin/admin
 	```
+## Example Run Project
+
+**JAR FILE:** https://drive.google.com/file/d/1zbOl35SwqzLyUaDEV0DlrPP_AVx4sG4b/view?usp=sharing
+
+**ENV requirement:** spark 2.2.0ENV requirement: spark 2.2.0 - http://archive.cloudera.com/spark2/parcels/2.2.0.cloudera4/
+
+1. Create topic : **topic_covid**
+	```sh
+	cd /usr/lib/kafka/bin
+	./kafka-topics.sh --create --zookeeper localhost:2181 --replication-factor 1 --partitions 1 --topic topic_covid
+	```
+2. Start Producer use topic: **topic_covid**
+	```sh
+	cd /usr/lib/kafka/bin 
+	./kafka-console-producer.sh --broker-list localhost:9092 --topic topic_covid
+	```
+3. Start consumer use topic: **topic_covid**
+	```sh
+	cd /usr/lib/kafka/bin 
+	./kafka-console-consumer.sh --zookeeper localhost:2181 -topic ${topic_name} --from-beginnin
+	```
+4. Run Jar Script to STREAMMING data to HBASE 
+	```sh
+	export SPARK_KAFKA_VERSION=0.10
+	spark2-submit --class "SparkStreaming.StreamingJob" --master yarn ${path_to_jar_file}/SparkStream.jar "hbase_table_name" "topic_covid"
+	```
+5. Run script to put data to producer 
+	```sh
+	./import_data.sh | /usr/lib/kafka/bin/kafka-console-producer.sh --broker-list localhost:9092 --topic topic_covid
+	```
+> please check how to write the import_data.sh at import data section	
+
+6. Import data to elasticsearch 
+	```sh
+	park2-submit --class "SparkSQL.SparkSQL" --master yarn /home/cloudera/Desktop/SparkStream.jar "hbase_table_name" "date"
+	```
+> date format: yyyy-MM-dd
