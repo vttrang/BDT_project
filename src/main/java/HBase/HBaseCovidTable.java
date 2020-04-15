@@ -17,19 +17,20 @@ import java.util.Date;
 
 public class HBaseCovidTable {
 
-	public static final String TABLE_NAME = "covid19";
+	public static final String DEFAULT_TABLE_NAME = "covid19";
 	public static final String CF_1_CONFIRMED = "Confirmed";
 	public static final String CF_2_DEATH = "Death";
 	public static final String CF_3_RECOVERED = "Recovered";
 	public static final String CF_4_ACTIVE = "Active";
 
-	public HBaseCovidTable(String dataLine) throws IOException {
+	String tableName;
+	public HBaseCovidTable(String tableName) throws IOException {
+		this.tableName = tableName;
+		if (this.tableName == "") {
+			this.tableName = DEFAULT_TABLE_NAME;
+		}
 		createTable();
-		insertData(dataLine);
-	}
-	
-	public HBaseCovidTable() throws IOException{
-		createTable();
+
 	}
 	
 	public void createTable() throws IOException {
@@ -38,7 +39,7 @@ public class HBaseCovidTable {
 		try (Connection connection = ConnectionFactory.createConnection(config);
 				Admin admin = connection.getAdmin()) {
 			HTableDescriptor table = new HTableDescriptor(
-					TableName.valueOf(TABLE_NAME));
+					TableName.valueOf(this.tableName));
 			
 			if (admin.tableExists(table.getTableName())) {
 				System.out.println("Table has already existed");
@@ -67,7 +68,7 @@ public class HBaseCovidTable {
 			Configuration config = HBaseConfiguration.create();
 
 			try (Connection connection = ConnectionFactory.createConnection(config);
-					Table table = connection.getTable(TableName.valueOf(TABLE_NAME))) {
+					Table table = connection.getTable(TableName.valueOf(this.tableName))) {
 
 				Put p1 = new Put(Bytes.toBytes(rowKey));
 				p1.addColumn(Bytes.toBytes(CF_1_CONFIRMED), Bytes.toBytes(column), Bytes.toBytes(cells[7]));
