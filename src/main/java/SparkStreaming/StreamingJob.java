@@ -53,7 +53,7 @@ public final class StreamingJob {
         kafkaParams.put(prop.getProperty("auto.offset.reset.key"), prop.getProperty("auto.offset.reset.value"));
         kafkaParams.put(prop.getProperty("enable.auto.commit.key"), prop.getProperty("enable.auto.commit.value"));
 
-        Collection<String> topics = Arrays.asList(args[0]);
+        Collection<String> topics = Arrays.asList(args[1]);
 
         final JavaInputDStream<ConsumerRecord<String, String>> messages = KafkaUtils.createDirectStream(
                 jssc,
@@ -61,14 +61,12 @@ public final class StreamingJob {
                 ConsumerStrategies.<String, String>Subscribe(topics, kafkaParams)
         );
         
-		
-        covidTable = new HBaseCovidTable();
+        String tableName = args[0];
+        if(tableName == "") {
+            tableName = HBaseCovidTable.DEFAULT_TABLE_NAME;
+        }
+        covidTable = new HBaseCovidTable(tableName);
         
-		//Insert single row
-		/*messages.foreachRDD(rdd -> rdd.foreach(message ->  {
-        	covidTable.insertData(message.value());	
-        }));*/
-		
 		//Insert multiple rows
 		messages.foreachRDD(rdd -> {
         	list = new ArrayList<String>();
