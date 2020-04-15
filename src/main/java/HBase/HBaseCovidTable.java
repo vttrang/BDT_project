@@ -121,9 +121,13 @@ public class HBaseCovidTable {
 		String newFormat = "(.*),(.*),(.*),(.*),(.*),(.*),(.*),(.*),(.*),(.*),(.*),\"(.*)\""; //12 fields
 		String oldFormat = "(.*),(.*),(.*),(.*),(.*),(.*),(.*),(.*)"; //8 fields
 		String oldestFormat = "(.*),(.*),(.*),(.*),(.*),(.*)"; //6 fields
+		String dirtyFormat = "(.*),(.*),(.*),(.*),(.*),(.*),(.*),(.*),(.*),(.*),(.*),(.*)"; //12 fields
 
 		String[] cells = new String[12];
-		if (line.matches(newFormat)) {
+		if (line.matches(newFormat)){
+			cells = line.split(",");
+		}
+		else if (line.matches(dirtyFormat)){
 			cells = line.split(",");
 		}
 		else if (line.matches(oldFormat) && line.split(",").length == 8){
