@@ -45,9 +45,7 @@ public class SparkSQL {
         
         String tableName = args[0];
         String column = args[1];
-        if(tableName == "") {
-            tableName = HBaseCovidTable.DEFAULT_TABLE_NAME;
-        }
+        
         String catalog = "{\n" +
                 "\t \"table\":{\"namespace\":\"default\", \"name\":\"" + tableName+ "\", \"tableCoder\":\"PrimitiveType\"},\n" +
                 "\t \"rowkey\":\"key\",\n" +
@@ -106,7 +104,7 @@ public class SparkSQL {
         ImmutableList<Map<String, Object>> iList = ImmutableList.<Map<String, Object>>builder().addAll(covids).build(); 
        
         JavaRDD<Map<String, Object>> javaRDD = jsc.parallelize(iList); 
-        JavaEsSpark.saveToEs(javaRDD, "covid19/data");    
+        JavaEsSpark.saveToEs(javaRDD, args[2] + "/data");    
         
         System.out.println("Schema: " + catalog);
     }

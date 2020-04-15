@@ -321,6 +321,6 @@
 
 6. Import data to elasticsearch 
 	```sh
-	park2-submit --class "SparkSQL.SparkSQL" --master yarn /home/cloudera/Desktop/SparkStream.jar "hbase_table_name" "date"
+	park2-submit --class "SparkSQL.SparkSQL" --master yarn /home/cloudera/Desktop/SparkStream.jar "hbase_table_name" "date" "ES_INDEX"
 	```
-> date format: yyyy-MM-dd
+> date format: yyyy-MM-dd, ES_INDEX: Elasticsearch index
