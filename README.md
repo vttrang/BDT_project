@@ -76,7 +76,7 @@
 6. Start consumer for ${topic_name}
 	```sh
 	$ cd /usr/lib/kafka/bin 
-	$ ./kafka-console-consumer.sh --zookeeper localhost:2181 -topic ${topic_name} --from-beginnin
+	$ ./kafka-console-consumer.sh --zookeeper localhost:2181 -topic ${topic_name} --from-beginning
 	```
 ### Import data
 1. Prepares data (*.csv) // Reads per file by date
@@ -106,7 +106,7 @@
 	sudo sh /home/cloudera/Downloads/dataRun.sh | /usr/lib/kafka/bin/kafka-console-producer.sh --broker-list localhost:9092 --topic ${topic-name}
 	```
 
-### How to install Spark 2 in Cloudera Manager (CM)
+### Install Spark 2 by Cloudera Manager (CM)
 1. Startup Cloudera Manager (CM)
     - Once the VM starts up, navigate to the Desktop and Execute the “Launch Cloudera Express” script.
     - Once complete, you should now be able to view the Cloudera Manager by opening up your web browser (within the VM) and navigating to:
@@ -177,7 +177,7 @@
     - Click on the blue button next to the Spark 2 service and click “Restart Stale Services”
     - Ensure the “Re-deploy client configuration” is checked and click “Restart Now”
 
-    7. Testing
+7. Testing
     ```sh
     MASTER=yarn /opt/cloudera/parcels/SPARK2/lib/spark2/bin/run-example SparkPi 100
     ```
