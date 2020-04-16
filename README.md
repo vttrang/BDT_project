@@ -288,8 +288,9 @@
 	localhost:5601  - admin/admin
 	```
 ## Example Run Project
+**Video for example demo** https://drive.google.com/file/d/1afV8lyC4bEg2Ena08d2TQQufn0l9kfXA/view?usp=sharing
 
-**JAR FILE:** https://drive.google.com/file/d/1zbOl35SwqzLyUaDEV0DlrPP_AVx4sG4b/view?usp=sharing
+**JAR FILE:** https://drive.google.com/file/d/12pCWVEbl-YBCnbWfjF41kwJfYRAhNWvC/view?usp=sharing
 
 **ENV requirement:** spark 2.2.0ENV requirement: spark 2.2.0 - http://archive.cloudera.com/spark2/parcels/2.2.0.cloudera4/
 
